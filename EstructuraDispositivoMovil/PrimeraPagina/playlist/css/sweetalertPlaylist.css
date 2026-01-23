@@ -21,6 +21,12 @@
     50% { opacity: 0.9; transform: rotate(15deg) scale(1.15); }
 }
 
+/* Animación de giro para la lupa */
+@keyframes girarLupa {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
 /* --- CONTENEDOR PRINCIPAL MODAL --- */
 .aurora-bg-swal {
     background: linear-gradient(135deg, #e0f7fa 0%, #ffffff 50%, #b2ebf2 100%) !important;
@@ -28,16 +34,16 @@
     border: 2px solid rgba(255, 255, 255, 0.8) !important;
     box-shadow: 0 0 20px rgba(120, 166, 181, 0.4) !important;
     margin-top: 45px !important;
-    overflow: visible !important; /* Vital para que el botón flote fuera */
+    overflow: visible !important;
 }
 
-/* --- BOTÓN CERRAR CIRCULAR (PEQUEÑO, CENTRADO Y NEVADO) --- */
+/* --- BOTÓN CERRAR CIRCULAR (CENTRADO Y NEVADO) --- */
 .btn-cerrar-circular-fuera {
     position: absolute !important;
-    top: -18px !important; /* Elevado sobre el borde */
+    top: -18px !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
-    width: 32px !important; /* Más pequeño */
+    width: 32px !important;
     height: 32px !important;
     background-color: #ffffff !important;
     border: 1.5px solid var(--azul-claro) !important;
@@ -48,122 +54,82 @@
     color: var(--azul-oscuro) !important;
     animation: bucleCongelacion 4s ease-in-out infinite !important;
     cursor: pointer;
-    z-index: 9999 !important; /* Flota sobre todo */
+    z-index: 9999 !important;
     box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
-    transition: transform 0.3s ease !important;
 }
 
-/* El mini copo de nieve dentro del círculo de cierre */
-.btn-cerrar-circular-fuera::before {
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23c0d1d6' fill-opacity='0.4'%3E%3Cpath d='M22,11h-4.17l3.24-3.24l-1.41-1.41L15.41,10H13V7.59l3.66-3.66l-1.41-1.41L12,5.76V2h-2v3.76L6.76,2.51L5.34,3.93L9,7.59V10H6.59 L2.93,6.34L1.51,7.76L4.76,11H0.5v2h4.26l-3.24,3.24l1.41,1.41L6.59,14H9v2.41l-3.66,3.66l1.41,1.41L10,18.24V22h2v-3.76l3.24,3.24 l1.41-1.41L13,16.41V14h2.41l3.66,3.66l1.41-1.41L17.24,13H21.5V11z'/%3E%3C/svg%3E");
-    background-size: 18px;
-    background-repeat: no-repeat;
-    background-position: center;
-    pointer-events: none;
-    animation: brilloHieloConstante 6s infinite;
-}
-
-.btn-cerrar-circular-fuera i {
-    font-size: 0.8rem !important; /* Tache más pequeño */
-    position: relative;
-    z-index: 2;
-}
-
-.btn-cerrar-circular-fuera:hover {
-    transform: translateX(-50%) scale(1.1) !important;
-}
+.btn-cerrar-circular-fuera i { font-size: 0.8rem !important; }
 
 /* --- IMÁGENES --- */
 .img-recortada, .img-full-recortada {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover !important; 
-    border-radius: 15px;
+    width: 100% !important; height: 100% !important;
+    object-fit: cover !important; border-radius: 15px;
 }
 
 .swal-img-container {
-    width: 100%; 
-    aspect-ratio: 16 / 9;
-    overflow: hidden; 
-    position: relative;
-    border-radius: 15px; 
-    margin: 15px 0;
+    width: 100%; aspect-ratio: 16 / 9;
+    overflow: hidden; position: relative;
+    border-radius: 15px; margin: 15px 0;
     border: 1px solid var(--azul-muy-claro);
 }
 
+/* --- LUPA CON EFECTO NIVEL 1 Y GIRO --- */
 .lupa-congelada {
     position: absolute; 
     bottom: 10px; 
     right: 10px;
-    background: var(--azul-oscuro) !important;
-    color: white !important; 
-    padding: 8px; 
+    width: 35px;
+    height: 35px;
     border-radius: 50%;
+    border: 1.5px solid var(--azul-claro);
     cursor: pointer; 
     display: flex; 
     align-items: center; 
     justify-content: center;
+    z-index: 10;
+    /* Sincronizada con el fondo de los botones */
+    animation: bucleCongelacion 4s ease-in-out infinite !important;
+}
+
+.lupa-congelada i {
+    font-size: 0.9rem;
+    /* Gira sin detenerse */
+    animation: girarLupa 3s linear infinite;
 }
 
 /* --- INFO BOX --- */
 .swal-info-box {
-    text-align: left; 
-    background: rgba(255, 255, 255, 0.6);
-    padding: 15px; 
-    border-radius: 15px; 
-    margin-bottom: 20px;
+    text-align: left; background: rgba(255, 255, 255, 0.6);
+    padding: 15px; border-radius: 15px; margin-bottom: 20px;
     border: 1px solid var(--azul-muy-claro);
 }
 
-.swal-info-box p { 
-    margin: 8px 0; 
-    font-size: 0.9rem; 
-    color: var(--azul-oscuro); 
-    font-weight: 600; 
-}
-
-.swal-info-box i { 
-    width: 25px; 
-    text-align: center; 
-    animation: iconoBlanco 4s ease-in-out infinite; 
-}
+.swal-info-box p { margin: 8px 0; font-size: 0.9rem; color: var(--azul-oscuro); font-weight: 600; }
+.swal-info-box i { width: 25px; text-align: center; animation: iconoBlanco 4s ease-in-out infinite; }
 
 /* --- BOTÓN YOUTUBE --- */
 .link-card-hielo {
-    position: relative; 
-    overflow: hidden;
-    background-color: #ffffff; 
-    display: flex !important;
-    align-items: center; 
-    justify-content: center;
-    padding: 14px; 
-    border-radius: 12px;
-    text-decoration: none; 
-    border: 1px solid var(--azul-claro);
+    position: relative; overflow: hidden;
+    background-color: #ffffff; display: flex !important;
+    align-items: center; justify-content: center;
+    padding: 14px; border-radius: 12px;
+    text-decoration: none; border: 1px solid var(--azul-claro);
     animation: bucleCongelacion 4s ease-in-out infinite;
-    font-weight: 700; 
-    z-index: 1;
+    font-weight: 700; z-index: 1;
 }
 
 .icon-yt-hielo {
-    position: absolute; 
-    left: 15px; 
-    font-size: 1.8rem; /* Un poco más grande como pediste antes */
+    position: absolute; left: 15px; font-size: 1.8rem;
     animation: iconoBlanco 4s ease-in-out infinite;
 }
 
 .link-card-hielo::after {
-    content: ""; 
-    position: absolute;
+    content: ""; position: absolute;
     top: 0; right: -5px; width: 60px; height: 100%;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white' fill-opacity='0.3'%3E%3Cpath d='M22,11h-4.17l3.24-3.24l-1.41-1.41L15.41,10H13V7.59l3.66-3.66l-1.41-1.41L12,5.76V2h-2v3.76L6.76,2.51L5.34,3.93L9,7.59V10H6.59 L2.93,6.34L1.51,7.76L4.76,11H0.5v2h4.26l-3.24,3.24l1.41,1.41L6.59,14H9v2.41l-3.66,3.66l1.41,1.41L10,18.24V22h2v-3.76l3.24,3.24 l1.41-1.41L13,16.41V14h2.41l3.66,3.66l1.41-1.41L17.24,13H21.5V11z'/%3E%3C/svg%3E");
-    background-size: 40px; 
-    background-repeat: no-repeat;
-    background-position: right center; 
-    mix-blend-mode: screen;
+    background-size: 40px; background-repeat: no-repeat;
+    background-position: right center; mix-blend-mode: screen;
     animation: brilloHieloConstante 5s ease-in-out infinite;
 }
+
+.popup-lupa-transparente { background: transparent !important; box-shadow: none !important; }

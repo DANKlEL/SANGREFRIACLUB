@@ -20,7 +20,7 @@ function abrirInfoVideo(titulo, id, canal) {
         allowOutsideClick: true,
         html: `
             <div class="swal-content-wrapper">
-                <h3 class="swal-titulo-video">${titulo}</h3>
+                <h3 class="swal-titulo-video" style="color:var(--azul-oscuro); font-weight:bold;">${titulo}</h3>
                 <div class="swal-img-container">
                     <img src="https://i.ytimg.com/vi/${id}/hqdefault.jpg" class="img-recortada">
                     <div onclick="verMiniaturaGigante('${id}')" class="lupa-congelada">
