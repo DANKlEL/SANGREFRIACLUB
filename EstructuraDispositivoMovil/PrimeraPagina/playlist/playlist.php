@@ -1,7 +1,10 @@
 <?php
+// Incluimos tu base de datos de categorías existente
+include 'sweetAlertCategorias.php';
+
 $playlist_id = 'PLfRglv5Ul9MgC6RNj-4BKTmaLnEWI4_oY';
 
-function obtenerVideosPlaylist($id) {
+function obtenerVideosPlaylist($id, $info_db) {
     $url = "https://www.youtube.com/playlist?list=" . $id;
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
@@ -23,19 +26,17 @@ function obtenerVideosPlaylist($id) {
             if (!isset($item['playlistVideoRenderer'])) continue;
             
             $v = $item['playlistVideoRenderer'];
-            $title = $v['title']['runs'][0]['text'] ?? 'Sin título';
             $video_id = $v['videoId'];
+            $title = $v['title']['runs'][0]['text'] ?? 'Sin título';
             $canal = $v['shortBylineText']['runs'][0]['text'] ?? 'Artista Desconocido';
 
-            $tipo = "Visual";
-            if (stripos($title, '3D') !== false) $tipo = "3D";
-            elseif (stripos($title, 'Pixel') !== false) $tipo = "Pixel Art";
-            elseif (stripos($title, 'Lyric') !== false) $tipo = "Lyric";
+            // Usamos tu diccionario $info_videos_db
+            $meta = $info_db[$video_id] ?? ['tipo' => 'Visual', 'fecha' => 'Fecha Reciente'];
 
             $videos[] = [
                 "titulo" => trim(preg_replace('/\(Shot by.*?\)|Video Oficial|Oficial/i', '', $title)),
                 "url"    => $video_id,
-                "tipo"   => $tipo,
+                "tipo"   => $meta['tipo'],
                 "canal"  => $canal
             ];
         }
@@ -43,8 +44,9 @@ function obtenerVideosPlaylist($id) {
     return $videos;
 }
 
-$videos = obtenerVideosPlaylist($playlist_id);
-$categorias = ["TODOS", "3D", "Pixel Art", "Lyric"];
+$videos = obtenerVideosPlaylist($playlist_id, $info_videos_db);
+// Categorías simplificadas para los botones de filtrado
+$categorias = ["TODOS", "3D", "Pixel Art", "Lyric", "Anime", "VideoClip"];
 
 include 'sweetAlertPlaylist.php'; 
 ?>
@@ -87,6 +89,9 @@ include 'sweetAlertPlaylist.php';
                         <div class="video-clickable" onclick="reproducirVideo(document.getElementById('video-<?php echo $index; ?>'), '<?php echo $v['url']; ?>', '<?php echo addslashes($v['titulo']); ?>')">
                             <div class="video-details">
                                 <span class="v-title"><?php echo $v['titulo']; ?></span>
+                                <small style="display:block; color:var(--azul-claro); font-size:0.65rem; font-weight:bold; opacity:0.8;">
+                                    <?php echo strtoupper($v['tipo']); ?>
+                                </small>
                             </div>
                         </div>
 
@@ -102,28 +107,48 @@ include 'sweetAlertPlaylist.php';
 </div>
 
 <script>
+// Manejo del Reproductor
 function reproducirVideo(elemento, id, titulo) {
     if(elemento && elemento.classList.contains('video-item')) {
+        document.querySelectorAll('.video-item').forEach(v => v.classList.remove('selected-video'));
         elemento.classList.add('selected-video');
-        setTimeout(() => elemento.classList.remove('selected-video'), 600);
     }
 
     const wrapper = document.getElementById('video-wrapper');
     wrapper.innerHTML = `<iframe src="https://www.youtube.com/embed/${id}?autoplay=1&rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen style="position:absolute; top:0; left:0; width:100%; height:100%;"></iframe>`;
     document.getElementById('player-title').innerText = titulo;
+    
+    // Subir scroll suavemente al reproductor
+    document.querySelector('.custom-playlist-container').scrollIntoView({behavior: 'smooth'});
 }
 
+// Lógica de Categorías
 const cats = <?php echo json_encode($categorias); ?>;
 let indexCat = 0;
 
 function updatePlaylist() {
     const current = cats[indexCat];
     document.getElementById('current-cat').innerText = current;
+    
     document.querySelectorAll('.video-item').forEach(item => {
-        const type = item.getAttribute('data-type').toUpperCase();
-        item.style.display = (current === "TODOS" || type.includes(current.toUpperCase())) ? "flex" : "none";
+        const typeTag = item.getAttribute('data-type').toUpperCase();
+        
+        if (current === "TODOS") {
+            item.style.display = "flex";
+        } else {
+            // Si la categoría seleccionada (ej: 3D) está presente en el tag (ej: 3D | PIXEL ART)
+            if (typeTag.includes(current.toUpperCase())) {
+                item.style.display = "flex";
+            } else {
+                item.style.display = "none";
+            }
+        }
     });
 }
+
 function nextCat() { indexCat = (indexCat + 1) % cats.length; updatePlaylist(); }
 function prevCat() { indexCat = (indexCat - 1 + cats.length) % cats.length; updatePlaylist(); }
+
+// Inicialización
+document.addEventListener('DOMContentLoaded', updatePlaylist);
 </script>
