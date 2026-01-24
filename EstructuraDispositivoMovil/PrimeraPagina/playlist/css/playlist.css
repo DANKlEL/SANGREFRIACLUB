@@ -7,16 +7,16 @@
     max-width: 420px;
     margin: 20px auto;
     border-radius: 45px;
-    padding: 25px 10px; /* Un poco menos de padding lateral */
+    padding: 25px 10px;
     z-index: 1;
-    overflow: hidden;
+    overflow: hidden; /* IMPORTANTE: Corta cualquier desbordamiento */
+    overflow-x: hidden; /* Evita la barra lateral indeseada */
     box-sizing: border-box;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
     display: flex;
     flex-direction: column;
 }
 
-/* La luz que gira (Pista de carreras) */
 .cuerpo-movil-contenedor::before {
     content: "";
     position: absolute;
@@ -27,12 +27,10 @@
     z-index: -2;
 }
 
-/* FONDO CON EFECTO AURORA BOREAL (Reemplaza el blanco sólido) */
 .cuerpo-movil-contenedor::after {
     content: "";
     position: absolute;
     inset: 4px;
-    /* Degradado animado Aurora */
     background: linear-gradient(135deg, #ffffff, #e3f2f6, #c2e1e9, #ffffff);
     background-size: 400% 400%;
     animation: auroraFlow 10s ease infinite;
@@ -52,10 +50,10 @@
 }
 
 /* ============================================================
-   CONTENEDORES DE VIDEOS (POLAR & MÁS PEQUEÑOS)
+   CONTENEDORES DE VIDEOS
    ============================================================ */
 .polar-card {
-    background: rgba(255, 255, 255, 0.7) !important; /* Más transparente para ver la aurora */
+    background: rgba(255, 255, 255, 0.7) !important;
     border: 1px solid rgba(255, 255, 255, 0.8) !important;
     backdrop-filter: blur(5px);
     box-shadow: 0 4px 10px rgba(120, 166, 181, 0.2);
@@ -65,19 +63,20 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 6px 10px; /* Contenedores ligeramente más pequeños */
+    padding: 6px 10px;
     margin-bottom: 10px;
     border-radius: 12px;
     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .selected-video {
-    transform: translateX(15px);
+    transform: translateX(10px); /* Reducido para no salirse del chasis */
 }
 
-/* MINIATURA RECTANGULAR A LA DERECHA */
 .rect-thumb-container {
-    width: 90px; /* Reducida un poco */
+    width: 90px;
     height: 55px;
     border: 2px solid #78a6b5;
     border-radius: 6px;
@@ -139,10 +138,17 @@
 .video-responsive-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; }
 .card-info h3 { margin: 0; padding: 10px; color: #78a6b5; font-size: 0.8rem; font-weight: 900; text-transform: uppercase; text-align: center; }
 
-/* SCROLLBAR */
-.video-scroll-list { max-height: 360px; overflow-y: auto; padding-right: 5px; }
-.video-scroll-list::-webkit-scrollbar { width: 4px; }
-.video-scroll-list::-webkit-scrollbar-thumb { background: #78a6b5; border-radius: 10px; }
+/* SCROLLBAR OCULTA PERO FUNCIONAL */
+.video-scroll-list { 
+    max-height: 400px; 
+    overflow-y: auto; 
+    overflow-x: hidden;
+    padding-right: 0px; 
+    scrollbar-width: none; /* Firefox */
+}
+.video-scroll-list::-webkit-scrollbar { 
+    display: none; /* Chrome, Safari, Edge */
+}
 
-.video-details { flex: 1; padding: 0 10px; }
-.v-title { color: #1a1c1e; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; line-height: 1.1; }
+.video-details { flex: 1; padding: 0 10px; overflow: hidden; }
+.v-title { color: #1a1c1e; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; line-height: 1.1; display: block; }

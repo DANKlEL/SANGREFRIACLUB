@@ -30,7 +30,6 @@ function obtenerVideosPlaylist($id, $info_db) {
             $title = $v['title']['runs'][0]['text'] ?? 'Sin título';
             $canal = $v['shortBylineText']['runs'][0]['text'] ?? 'Artista Desconocido';
 
-            // Usamos tu diccionario $info_videos_db
             $meta = $info_db[$video_id] ?? ['tipo' => 'Visual', 'fecha' => 'Fecha Reciente'];
 
             $videos[] = [
@@ -45,7 +44,6 @@ function obtenerVideosPlaylist($id, $info_db) {
 }
 
 $videos = obtenerVideosPlaylist($playlist_id, $info_videos_db);
-// Categorías simplificadas para los botones de filtrado
 $categorias = ["TODOS", "3D", "Pixel Art", "Lyric", "Anime", "VideoClip"];
 
 include 'sweetAlertPlaylist.php'; 
@@ -107,7 +105,6 @@ include 'sweetAlertPlaylist.php';
 </div>
 
 <script>
-// Manejo del Reproductor
 function reproducirVideo(elemento, id, titulo) {
     if(elemento && elemento.classList.contains('video-item')) {
         document.querySelectorAll('.video-item').forEach(v => v.classList.remove('selected-video'));
@@ -118,25 +115,31 @@ function reproducirVideo(elemento, id, titulo) {
     wrapper.innerHTML = `<iframe src="https://www.youtube.com/embed/${id}?autoplay=1&rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen style="position:absolute; top:0; left:0; width:100%; height:100%;"></iframe>`;
     document.getElementById('player-title').innerText = titulo;
     
-    // Subir scroll suavemente al reproductor
-    document.querySelector('.custom-playlist-container').scrollIntoView({behavior: 'smooth'});
+    // SCROLL EXACTO AL REPRODUCTOR
+    const playerArea = document.getElementById('main-player-area');
+    const offset = 20; // Espacio de respeto arriba
+    const bodyRect = document.body.getBoundingClientRect().top;
+    const elementRect = playerArea.getBoundingClientRect().top;
+    const elementPosition = elementRect - bodyRect;
+    const offsetPosition = elementPosition - offset;
+
+    window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+    });
 }
 
-// Lógica de Categorías
 const cats = <?php echo json_encode($categorias); ?>;
 let indexCat = 0;
 
 function updatePlaylist() {
     const current = cats[indexCat];
     document.getElementById('current-cat').innerText = current;
-    
     document.querySelectorAll('.video-item').forEach(item => {
         const typeTag = item.getAttribute('data-type').toUpperCase();
-        
         if (current === "TODOS") {
             item.style.display = "flex";
         } else {
-            // Si la categoría seleccionada (ej: 3D) está presente en el tag (ej: 3D | PIXEL ART)
             if (typeTag.includes(current.toUpperCase())) {
                 item.style.display = "flex";
             } else {
@@ -149,6 +152,5 @@ function updatePlaylist() {
 function nextCat() { indexCat = (indexCat + 1) % cats.length; updatePlaylist(); }
 function prevCat() { indexCat = (indexCat - 1 + cats.length) % cats.length; updatePlaylist(); }
 
-// Inicialización
 document.addEventListener('DOMContentLoaded', updatePlaylist);
 </script>
