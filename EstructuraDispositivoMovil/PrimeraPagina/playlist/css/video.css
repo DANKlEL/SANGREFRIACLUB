@@ -1,25 +1,65 @@
 /* ============================================================
-   ESTILO DEL VIDEO LOCAL (INTRO)
+   ESTILOS PARA EL VIDEO DE INTRODUCCIÓN LOCAL
    ============================================================ */
+
+/* Contenedor del video (wrapper) */
+#video-wrapper {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%; /* Relación de aspecto 16:9 */
+    height: 0;
+    overflow: hidden;
+    background-color: #000; /* Fondo negro para evitar parpadeos */
+    border-radius: 18px;
+    transition: opacity 0.4s ease-in-out; /* Transición suave para el efecto de carga */
+}
+
+/* El elemento de video propiamente dicho */
 .video-intro-estilo {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Asegura que cubra el área 2080x996 */
+    /* Object-fit cover asegura que tus medidas 2080x996 llenen el espacio 
+       sin estirarse, recortando sutilmente los bordes sobrantes */
+    object-fit: cover; 
     border-radius: 18px;
-    background-color: #000;
+    pointer-events: none; /* Evita que el usuario pause el video por accidente al tocarlo */
+    z-index: 1;
 }
 
-#video-wrapper {
-    transition: opacity 0.4s ease-in-out;
-    background: #000;
-    border-radius: 18px;
-}
-
-/* Evitar que el video local tape los bordes redondeados del contenedor */
+/* Ajuste del reproductor principal para que el video luzca premium */
 .main-playlist-card {
     position: relative;
+    background: #000;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 2px solid #78a6b5;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+    z-index: 5;
+}
+
+/* Capa de suavizado sobre el video (opcional para dar un toque cinemático) */
+#video-wrapper::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.1), transparent 30%);
+    pointer-events: none;
     z-index: 2;
+}
+
+/* Estilo para los IFRAMES de YouTube para que hereden el redondeado */
+#video-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 18px;
+    z-index: 3;
 }

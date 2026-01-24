@@ -47,9 +47,10 @@ function verMiniaturaGigante(id) {
     
     // Mapeo de IDs de YouTube a tus archivos descargados
     const mapeoLocal = {
-        'toA7TAhdJQM': 'mala.jpg',          // MALA
-        'ih8asyTq1oQ': 'hablame.jpg',       // Hablame
-        'Sx8w6pJpb3A': 'subemeLaNota.jpg'   // Subeme La Nota
+        'toA7TAhdJQM': 'mala.jpg',           // MALA
+        'ih8asyTq1oQ': 'hablame.jpg',        // Hablame
+        'Sx8w6pJpb3A': 'subemeLaNota.jpg',   // Subeme La Nota
+        'EAVGY5XqH6M': 'nubes.jpg'           // NUBES (Agregado)
     };
 
     // Si el ID está en el mapa, usamos la ruta local, si no, la de YouTube

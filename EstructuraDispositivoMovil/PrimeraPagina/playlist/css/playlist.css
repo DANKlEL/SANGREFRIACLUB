@@ -5,12 +5,15 @@
     position: relative;
     width: 92%;
     max-width: 420px;
-    margin: 20px auto;
+    
+    /* MARGEN NEGATIVO PARA SUBIRLO AL MÁXIMO */
+    margin: -15px auto 20px auto; 
+    
     border-radius: 45px;
     padding: 25px 10px;
     z-index: 1;
-    overflow: hidden; /* Corta cualquier desbordamiento */
-    overflow-x: hidden; /* Evita barras horizontales */
+    overflow: hidden; 
+    overflow-x: hidden; 
     box-sizing: border-box;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
     display: flex;
@@ -199,9 +202,9 @@
     overflow-y: auto; 
     overflow-x: hidden;
     padding-right: 0px; 
-    scrollbar-width: none; /* Firefox */
+    scrollbar-width: none; 
 }
 
 .video-scroll-list::-webkit-scrollbar { 
-    display: none; /* Chrome, Safari, Edge */
+    display: none; 
 }
